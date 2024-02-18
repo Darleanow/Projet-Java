@@ -7,9 +7,13 @@ import java.util.ArrayList;
 
 public class Game {
 
+    int current_time = 10;
+    int NIGHT_TIME = 19;
+    int DAY_TIME = 7;
+
+
     public Game()
     {
-
     }
 
     public void run_game(Player player)
@@ -33,6 +37,20 @@ public class Game {
                 sanitizer.handle_input();
                 sanitizer.clearConsole();
             }
+
+            handle_time();
         }
+    }
+
+    private void handle_time()
+    {
+        this.current_time++;
+        if (this.current_time == 24)
+        {
+            this.current_time = 0;
+        }
+
+        System.out.println("Current time: " + this.current_time);
+        System.out.println("It's currently " + (this.current_time > this.NIGHT_TIME ? "night" : "day"));
     }
 }
