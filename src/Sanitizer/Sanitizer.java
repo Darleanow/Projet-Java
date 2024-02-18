@@ -5,15 +5,16 @@ import java.util.Scanner;
 
 public class Sanitizer
 {
+    Scanner scanner;
     public Sanitizer()
     {
-
+        this.scanner = new Scanner(System.in);
     }
 
     public <T> boolean check_valid(T value, ArrayList<T> options) {
-        // Assuming T is always String in this context, otherwise, this method should be adjusted or specifically typed for String.
-        return options.contains(value) && !((String)value).trim().isEmpty();
+        return options.contains(value);
     }
+
 
     public int to_int(String value)
     {
@@ -27,8 +28,7 @@ public class Sanitizer
 
     public String handle_input()
     {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+        return this.scanner.nextLine();
     }
 
     public void clearConsole()

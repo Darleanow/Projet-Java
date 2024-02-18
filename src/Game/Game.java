@@ -1,4 +1,5 @@
 package Game;
+
 import Player.*;
 import Sanitizer.*;
 
@@ -7,50 +8,66 @@ import java.util.ArrayList;
 
 public class Game {
 
-    int current_time = 10;
-    int NIGHT_TIME = 19;
-    int DAY_TIME = 7;
+    TimeManager time_manager;
 
-
-    public Game()
-    {
+    public Game() {
+        this.time_manager = new TimeManager();
     }
 
-    public void run_game(Player player)
-    {
+    public void run_game(Player player) {
         Sanitizer sanitizer = new Sanitizer();
 
-        while(player.is_alive())
-        {
-            System.out.println("Select your action:\n"
-                    + "1. Option 1\n"
-                    + "2. Option 2\n"
-                    + "3. Option 3\n"
-                    + "4. Option 4\n");
+        while (player.is_alive()) {
+            System.out.println("""
+                    Select your action:
+                    1. Add x health
+                    2. Remove x health
+                    3. Set day
+                    4. Set night
+                    """);
 
             String choice = sanitizer.handle_input();
-            if (sanitizer.check_valid(choice, new ArrayList<String>(Arrays.asList("1", "2", "3", "4"))))
-            {
-                System.out.println("You have chosen: " + choice);
+            if (sanitizer.check_valid(sanitizer.to_int(choice), new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4)))) {
+                int value_choice = sanitizer.to_int(choice);
+                switch (value_choice) {
+                    case 1:
+                        System.out.println("Enter amount of health to add:");
+                        int addAmount = Integer.parseInt(sanitizer.handle_input());
+                        player.add_health(addAmount);
+                        break;
+                    case 2:
+                        System.out.println("Enter amount of health to remove:");
+                        int removeAmount = Integer.parseInt(sanitizer.handle_input());
+                        player.remove_health(removeAmount);
+                        break;
+                    case 3:
+                        this.time_manager.set_day();
+                        break;
+                    case 4:
+                        this.time_manager.set_night();
+                        break;
+                    default:
+                        System.out.println("Not implemented");
+                }
+                if (!player.is_alive()) {
+                    System.out.println("Player died, ending game");
+                    break;
+                }
+
                 System.out.println("Press enter to continue...");
 
                 sanitizer.handle_input();
                 sanitizer.clearConsole();
             }
-
+            System.out.println("Player health: " + player.get_health());
             handle_time();
         }
     }
 
-    private void handle_time()
-    {
-        this.current_time++;
-        if (this.current_time == 24)
-        {
-            this.current_time = 0;
-        }
+    private void handle_time() {
+        this.time_manager.increment_time();
 
-        System.out.println("Current time: " + this.current_time);
-        System.out.println("It's currently " + (this.current_time > this.NIGHT_TIME ? "night" : "day"));
+        System.out.println("Current time: " + this.time_manager.get_time());
+        System.out.println("It's currently " + (this.time_manager.is_day() ? "day" : "night"));
     }
 }
