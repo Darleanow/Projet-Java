@@ -24,7 +24,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Survival Game");
-
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add("dark-theme.css");
@@ -39,14 +38,65 @@ public class Main extends Application {
         GroupedComboBoxWidget groupedComboBoxWidget = new GroupedComboBoxWidget();
 
         // Set main options
-        groupedComboBoxWidget.setMainOptions(FXCollections.observableArrayList("Country A", "Country B"));
+        groupedComboBoxWidget.setMainOptions(FXCollections.observableArrayList(
+                "Collecter",
+                "Explorer",
+                "Consommer",
+                "Se Reposer",
+                "Construire",
+                "Fabriquer"));
 
-        // Set sub-options for each main option
-        groupedComboBoxWidget.addSubOptions("Country A", FXCollections.observableArrayList("State A1", "State A2"));
-        groupedComboBoxWidget.addSubOptions("Country B", FXCollections.observableArrayList("State B1", "State B2"));
+// Set sub-options for each main option
+        groupedComboBoxWidget.addSubOptions(
+                "Collecter",
+                FXCollections.observableArrayList(
+                        "Bois",
+                        "Pierre",
+                        "Baies",
+                        "Eau"));
+
+        groupedComboBoxWidget.addSubOptions(
+                "Explorer",
+                FXCollections.observableArrayList(
+                        "Forêt dense",
+                        "Rivière",
+                        "Montagne",
+                        "Plaine"));
+
+        groupedComboBoxWidget.addSubOptions(
+                "Consommer",
+                FXCollections.observableArrayList(
+                        "Baies",
+                        "Viande crue",
+                        "Viande cuite",
+                        "Eau purifiée")); // Dynamically fetch from inventory
+
+        groupedComboBoxWidget.addSubOptions(
+                "Se Reposer",
+                FXCollections.observableArrayList(
+                        "Courte sieste",
+                        "Nuit complète",
+                        "Méditation"));
+
+        groupedComboBoxWidget.addSubOptions(
+                "Construire",
+                FXCollections.observableArrayList(
+                        "Abri de fortune",
+                        "Cabane en bois",
+                        "Maison en pierre",
+                        "Forteresse"));
+
+        groupedComboBoxWidget.addSubOptions(
+                "Fabriquer",
+                FXCollections.observableArrayList(
+                        "Outils en pierre",
+                        "Arc et flèches",
+                        "Lance",
+                        "Poterie pour eau"));
+
 
         HBox container_actions = new HBox(groupedComboBoxWidget);
-        container_actions.setAlignment(Pos.BOTTOM_CENTER);
+        container_actions.setAlignment(Pos.BOTTOM_LEFT);
 
 
         VBox container_logs = new VBox(container_actions, logArea);
