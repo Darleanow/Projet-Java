@@ -8,19 +8,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class GUIManager {
 
     public Scene build_scene(Stage primaryStage) {
+        Font gameFont = Font.loadFont(getClass()
+                .getResourceAsStream("/Assets/super_legend_boy/super-legend-boy.otf"), 18);
+
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add("dark-theme.css");
@@ -30,46 +31,60 @@ public class GUIManager {
         logArea.setPrefHeight(root.getHeight() / 2.5);
 
 
-        HBox top_part = new HBox(10); // Espace entre les éléments
+        HBox top_part = new HBox();
         top_part.setFillHeight(true);
 
-        // Stats du joueur avec améliorations visuelles
-        VBox statsBox = new VBox(10); // Espace vertical avec espace
-        statsBox.setPadding(new Insets(15)); // Marge intérieure augmentée
-        statsBox.setStyle("-fx-background-color: #222; -fx-border-color: #AAA; -fx-border-width: 2;"); // Fond et bordure
+        // Stats du joueur
+        VBox statsBox = new VBox(10); // Ajoute un espacement de 10 entre les éléments de la VBox
+        statsBox.setPadding(new Insets(15));
+        statsBox.setStyle("-fx-background-color: #222; -fx-border-color: #AAA; -fx-border-width: 1;");
 
+        // Titre des statistiques
         Text title_stats = new Text("Statistiques");
-        title_stats.setFont(Font.font("Arial", FontWeight.BOLD, 20)); // Police plus grande et grasse
-        title_stats.setFill(Color.web("#FFD700"));
+        title_stats.setFont(gameFont);
+        title_stats.setTextAlignment(TextAlignment.CENTER);
+        title_stats.setFill(Color.web("#FFC857"));
+        StackPane titleContainer = new StackPane(title_stats);
+        titleContainer.setAlignment(Pos.CENTER);
+        titleContainer.setPadding(new Insets(0, 0, 10, 0));
 
-        Label hpLabel = new Label("HP: 100");
-        hpLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #00FF00;"); // Vert brillant, taille de police augmentée
+        // HP
+        Text hpText = new Text("HP: 100");
+        hpText.setFont(gameFont);
+        hpText.setStyle("-fx-font-size: 14; -fx-fill: #E63946");
+        HBox hpBox = new HBox(hpText);
+        hpBox.setAlignment(Pos.CENTER_LEFT);
 
-        Label energyLabel = new Label("Energie: 50");
-        energyLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #1E90FF;"); // Bleu Dodger, taille de police augmentée
+        // Energie
+        Text energyText = new Text("Energie: 50");
+        energyText.setFont(gameFont);
+        energyText.setStyle("-fx-font-size: 14; -fx-fill: #2A9D8F");
+        HBox energyBox = new HBox(energyText);
+        energyBox.setAlignment(Pos.CENTER_LEFT);
 
-        statsBox.getChildren().addAll(title_stats, hpLabel, energyLabel);
-        HBox.setHgrow(statsBox, Priority.ALWAYS); // Permet à statsBox de toujours s'étendre horizontalement
+        // Ajouter les éléments à la VBox
+        statsBox.getChildren().addAll(titleContainer, hpBox, energyBox);
+        HBox.setHgrow(statsBox, Priority.ALWAYS);
 
 
-        // Info du joueur et inventaire avec améliorations visuelles
-        VBox rightBox = new VBox(20); // Espace vertical plus grand pour une meilleure organisation
-        rightBox.setPadding(new Insets(15)); // Marge intérieure légèrement augmentée
-        rightBox.setStyle("-fx-background-color: #222; -fx-border-color: #AAA; -fx-border-width: 2;"); // Couleur de fond sombre et bordure claire
+        // Info du joueur et inventaire
+        VBox rightBox = new VBox(20);
+        rightBox.setPadding(new Insets(15));
+        rightBox.setStyle("-fx-background-color: #222; -fx-border-color: #AAA; -fx-border-width: 1;");
 
-        // Info du joueur (nom et heure/date) avec mise en forme améliorée
-        HBox playerInfo = new HBox(10); // Espacement entre les éléments
-        playerInfo.setAlignment(Pos.TOP_CENTER); // Alignement à droite pour une distinction claire
-        playerInfo.setStyle("-fx-background-color: #444; -fx-padding: 5; -fx-border-radius: 5; -fx-background-radius: 5;"); // Fond gris foncé, bordures arrondies
+        // Info du joueur (nom et heure/date)
+        HBox playerInfo = new HBox(10);
+        playerInfo.setAlignment(Pos.TOP_CENTER);
+        playerInfo.setStyle("-fx-background-color: #444; -fx-padding: 5; -fx-border-radius: 5; -fx-background-radius: 5;");
 
         Label nameLabel = new Label("Nom: Joueur1");
-        nameLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #E0E0E0;"); // Taille de police et couleur de texte pour un contraste élevé
+        nameLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #E0E0E0;");
 
         Label dateLabel = new Label("Jour: 01 Heure: 12:00");
-        dateLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #E0E0E0;"); // Identique à nameLabel pour la cohérence
+        dateLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #E0E0E0;");
 
         playerInfo.getChildren().addAll(nameLabel, dateLabel);
-
+        top_part.setSpacing(-1);
         rightBox.getChildren().addAll(playerInfo, this.build_scroll_pane_inventory(scene));
         HBox.setHgrow(rightBox, Priority.ALWAYS);
 
