@@ -11,17 +11,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.text.*;
 import javafx.stage.Stage;
 
 public class GUIManager {
 
     public Scene build_scene(Stage primaryStage) {
-        Font gameFont = Font.loadFont(getClass()
-                .getResourceAsStream("/Assets/super_legend_boy/super-legend-boy.otf"), 18);
+        Font gameFont18 = Font.loadFont(getClass()
+                .getResourceAsStream("/Assets/alagard/alagard.ttf"), 32);
+        Font gameFont16 = Font.loadFont(getClass()
+                .getResourceAsStream("/Assets/alagard/alagard.ttf"), 26);
+        Font gameFont14 = Font.loadFont(getClass()
+                .getResourceAsStream("/Assets/alagard/alagard.ttf"), 22);
 
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 800, 600);
@@ -42,7 +43,7 @@ public class GUIManager {
 
         // Titre des statistiques
         Text title_stats = new Text("Statistiques");
-        title_stats.setFont(gameFont);
+        title_stats.setFont(gameFont18);
         title_stats.setTextAlignment(TextAlignment.CENTER);
         title_stats.setFill(Color.web("#FFC857"));
         StackPane titleContainer = new StackPane(title_stats);
@@ -51,20 +52,32 @@ public class GUIManager {
 
         // HP
         Text hpText = new Text("HP: 100");
-        hpText.setFont(gameFont);
-        hpText.setStyle("-fx-font-size: 14; -fx-fill: #E63946");
+        // On high resolution screens, antialiasing might affect the render of small fonts
+        // We set the smoothing type to lcd, and it's fixed !
+        hpText.setFontSmoothingType(FontSmoothingType.LCD);
+        hpText.setFont(gameFont14);
+        hpText.setFill(Color.web("#E63946"));
         HBox hpBox = new HBox(hpText);
         hpBox.setAlignment(Pos.CENTER_LEFT);
 
+        // Faim
+        Text hungerText = new Text("Faim: 0%");
+        hungerText.setFont(gameFont14);
+        hungerText.setFontSmoothingType(FontSmoothingType.LCD);
+        hungerText.setFill(Color.web("#e67e39"));
+        HBox hungerBox = new HBox(hungerText);
+        hungerBox.setAlignment(Pos.CENTER_LEFT);
+
         // Energie
         Text energyText = new Text("Energie: 50");
-        energyText.setFont(gameFont);
-        energyText.setStyle("-fx-font-size: 14; -fx-fill: #2A9D8F");
+        energyText.setFont(gameFont14);
+        energyText.setFontSmoothingType(FontSmoothingType.LCD);
+        energyText.setFill(Color.web("#2A9D8F"));
         HBox energyBox = new HBox(energyText);
         energyBox.setAlignment(Pos.CENTER_LEFT);
 
         // Ajouter les éléments à la VBox
-        statsBox.getChildren().addAll(titleContainer, hpBox, energyBox);
+        statsBox.getChildren().addAll(titleContainer, hpBox, hungerBox, energyBox);
         HBox.setHgrow(statsBox, Priority.ALWAYS);
 
 
@@ -79,11 +92,13 @@ public class GUIManager {
         playerInfo.setStyle("-fx-background-color: #444; -fx-padding: 5; " +
                 "-fx-border-radius: 5; -fx-background-radius: 5;");
         Text nameText = new Text("Nom: Joueur1");
-        nameText.setFont(gameFont);
+        nameText.setFontSmoothingType(FontSmoothingType.LCD);
+        nameText.setFont(gameFont18);
         nameText.setFill(Color.web("#FFC857"));
         nameText.setStyle("-fx-font-size: 14;");
         Text dateText = new Text("Jour: 01 Heure: 12:00");
-        dateText.setFont(gameFont);
+        dateText.setFont(gameFont18);
+        dateText.setFontSmoothingType(FontSmoothingType.LCD);
         dateText.setFill(Color.web("#FFC857"));
         dateText.setStyle("-fx-font-size: 14;");
         VBox infoBox = new VBox(5);
