@@ -1,5 +1,6 @@
 package Widgets;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -75,19 +76,22 @@ public class GUIManager {
         // Info du joueur (nom et heure/date)
         HBox playerInfo = new HBox(10);
         playerInfo.setAlignment(Pos.TOP_CENTER);
-        playerInfo.setStyle("-fx-background-color: #444; -fx-padding: 5; -fx-border-radius: 5; -fx-background-radius: 5;");
+        playerInfo.setStyle("-fx-background-color: #444; -fx-padding: 5; " +
+                "-fx-border-radius: 5; -fx-background-radius: 5;");
+        Text nameText = new Text("Nom: Joueur1");
+        nameText.setFont(gameFont);
+        nameText.setFill(Color.web("#FFC857"));
+        nameText.setStyle("-fx-font-size: 14;");
+        Text dateText = new Text("Jour: 01 Heure: 12:00");
+        dateText.setFont(gameFont);
+        dateText.setFill(Color.web("#FFC857"));
+        dateText.setStyle("-fx-font-size: 14;");
+        VBox infoBox = new VBox(5);
+        infoBox.getChildren().addAll(nameText, dateText);
+        playerInfo.getChildren().add(infoBox);
 
-        Label nameLabel = new Label("Nom: Joueur1");
-        nameLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #E0E0E0;");
-
-        Label dateLabel = new Label("Jour: 01 Heure: 12:00");
-        dateLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #E0E0E0;");
-
-        playerInfo.getChildren().addAll(nameLabel, dateLabel);
-        top_part.setSpacing(-1);
         rightBox.getChildren().addAll(playerInfo, this.build_scroll_pane_inventory(scene));
         HBox.setHgrow(rightBox, Priority.ALWAYS);
-
 
         top_part.getChildren().addAll(statsBox, rightBox);
 
@@ -149,26 +153,38 @@ public class GUIManager {
         return container_actions;
     }
 
-    private ScrollPane build_scroll_pane_inventory(Scene scene)
-    {
-        // Inventaire
-        TableView<String> inventoryTable = new TableView<>();
-        TableColumn<String, String> itemColumn = new TableColumn<>("Item");
-        itemColumn.setCellValueFactory(new PropertyValueFactory<>("itemName"));
+    private ScrollPane build_scroll_pane_inventory(Scene scene) {
+        // Inventaire avec trois colonnes : Item, Type, et Quantité
+        TableView<ObservableList<String>> inventoryTable = new TableView<>();
+        TableColumn<ObservableList<String>, String> itemColumn = new TableColumn<>("Item");
+        TableColumn<ObservableList<String>, String> typeColumn = new TableColumn<>("Type");
+        TableColumn<ObservableList<String>, String> quantityColumn = new TableColumn<>("Quantité");
 
-        ObservableList<String> items = FXCollections.observableArrayList(
-                new String("Item 1"),
-                new String("Item 2"),
-                new String("Item 3")
-        );
+        // Configuration des colonnes
+        itemColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().get(0)));
+        typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().get(1)));
+        quantityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().get(2)));
+
+        // Ajout des colonnes à la table
+        inventoryTable.getColumns().addAll(itemColumn, typeColumn, quantityColumn);
+
+        // Exemples d'items avec types et quantités
+        ObservableList<ObservableList<String>> items = FXCollections.observableArrayList();
+        items.add(FXCollections.observableArrayList("Épée", "Arme", "1"));
+        items.add(FXCollections.observableArrayList("Bouclier", "Défense", "2"));
+        items.add(FXCollections.observableArrayList("Potion", "Consommable", "5"));
+
+        // Définition des items dans la table
         inventoryTable.setItems(items);
 
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(inventoryTable);
+        // Configuration du ScrollPane
+        ScrollPane scrollPane = new ScrollPane(inventoryTable);
         scrollPane.setPrefViewportWidth(scene.getWidth() / 5);
         scrollPane.setPrefViewportHeight(scene.getHeight() / 3);
         scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background: #222; -fx-border-color: #AAA;");
 
         return scrollPane;
     }
+
 }
