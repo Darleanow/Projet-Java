@@ -24,11 +24,11 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         GUIManager gui = new GUIManager();
-        Scene scene = gui.build_scene(primaryStage);
+        Scene scene = gui.buildScene(primaryStage);
 
-        gui.paintLog( "Hello world", true, "red", true);
+/*        gui.paintLog( "Hello world", true, "red", true);
         gui.paintLog( "Hello world", true, "red");
-        gui.paintLog( "Hello world", true);
+        gui.paintLog( "Hello world", true);*/
         primaryStage.setTitle("Survival Game");
 
         primaryStage.setScene(scene);
