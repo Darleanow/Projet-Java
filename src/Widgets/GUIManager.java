@@ -149,7 +149,6 @@ public class GUIManager {
         groupedComboBoxWidget.setMainOptions(FXCollections.observableArrayList(
                 "Collecter",
                 "Explorer",
-                "Consommer",
                 "Se Reposer",
                 "Construire",
                 "Fabriquer"));
@@ -160,10 +159,6 @@ public class GUIManager {
 
         groupedComboBoxWidget.addSubOptions("Explorer",
                 FXCollections.observableArrayList("Forêt dense", "Rivière", "Montagne", "Plaine"));
-
-        // TODO: Fetch this from inventory
-        groupedComboBoxWidget.addSubOptions("Consommer",
-                FXCollections.observableArrayList("Baies", "Viande crue", "Viande cuite", "Eau purifiée"));
 
         groupedComboBoxWidget.addSubOptions("Se Reposer",
                 FXCollections.observableArrayList("Courte sieste", "Nuit complète", "Méditation"));
