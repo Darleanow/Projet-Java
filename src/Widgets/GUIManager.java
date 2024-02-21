@@ -5,11 +5,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
@@ -83,7 +85,6 @@ public class GUIManager {
         statsBox.getChildren().addAll(titleContainer, hpBox, hungerBox, energyBox);
         HBox.setHgrow(statsBox, Priority.ALWAYS);
 
-
         VBox rightBox = new VBox(10);
         rightBox.setPadding(new Insets(10));
         rightBox.setStyle("-fx-background-color: #222; -fx-border-color: #999; -fx-border-width: 2;");
@@ -117,7 +118,6 @@ public class GUIManager {
         VBox playerInfoBox = new VBox(10, nameContainer, dateTimeBox);
 
         rightBox.getChildren().addAll(playerInfoBox, build_scroll_pane_inventory(scene));
-
 
         HBox.setHgrow(rightBox, Priority.ALWAYS);
 
@@ -182,7 +182,6 @@ public class GUIManager {
     }
 
     private ScrollPane build_scroll_pane_inventory(Scene scene) {
-        // Inventaire avec trois colonnes : Item, Type, et Quantité
         TableView<ObservableList<String>> inventoryTable = new TableView<>();
         TableColumn<ObservableList<String>, String> itemColumn = new TableColumn<>("Item");
         TableColumn<ObservableList<String>, String> typeColumn = new TableColumn<>("Type");
@@ -193,19 +192,51 @@ public class GUIManager {
         typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().get(1)));
         quantityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().get(2)));
 
-        // Ajout des colonnes à la table
         inventoryTable.getColumns().addAll(itemColumn, typeColumn, quantityColumn);
 
-        // Exemples d'items avec types et quantités
+        // Exemples d'items
         ObservableList<ObservableList<String>> items = FXCollections.observableArrayList();
         items.add(FXCollections.observableArrayList("Épée", "Arme", "1"));
         items.add(FXCollections.observableArrayList("Bouclier", "Défense", "2"));
         items.add(FXCollections.observableArrayList("Potion", "Consommable", "5"));
 
-        // Définition des items dans la table
         inventoryTable.setItems(items);
 
-        // Configuration du ScrollPane
+        // Création du menu contextuel
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.setStyle("-fx-background-color: #333; -fx-text-fill: white; -fx-border-color: black;");
+
+        // Configuration du menu contextuel pour les clics droits sur les éléments
+        inventoryTable.setRowFactory(tv -> {
+            TableRow<ObservableList<String>> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.SECONDARY && event.getClickCount() == 1) {
+                    ObservableList<String> rowData = row.getItem();
+                    String itemType = rowData.get(1); // Type de l'item
+                    contextMenu.getItems().clear(); // Nettoie les anciens éléments
+
+                    // Configure les options du menu en fonction du type d'item
+                    switch (itemType) {
+                        case "Arme":
+                            contextMenu.getItems().add(new MenuItem("Utiliser"));
+                            contextMenu.getItems().add(new MenuItem("Jeter"));
+                            break;
+                        case "Défense":
+                            contextMenu.getItems().add(new MenuItem("Équiper"));
+                            contextMenu.getItems().add(new MenuItem("Jeter"));
+                            break;
+                        case "Consommable":
+                            contextMenu.getItems().add(new MenuItem("Consommer"));
+                            contextMenu.getItems().add(new MenuItem("Jeter"));
+                            break;
+                    }
+
+                    contextMenu.show(row, event.getScreenX(), event.getScreenY());
+                }
+            });
+            return row;
+        });
+
         ScrollPane scrollPane = new ScrollPane(inventoryTable);
         scrollPane.setPrefViewportWidth(scene.getWidth() / 5);
         scrollPane.setPrefViewportHeight(scene.getHeight() / 3);
@@ -214,6 +245,7 @@ public class GUIManager {
 
         return scrollPane;
     }
+
 
     private ImageView getImageFromTime(String time)
     {

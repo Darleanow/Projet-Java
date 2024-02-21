@@ -33,21 +33,34 @@
     -fx-text-fill: white;
 }
 
+.text-area {
+    -fx-control-inner-background: #222;
+    -fx-text-fill: white;
+}
+
 .table-view {
     -fx-base: #2b2b2b;
     -fx-control-inner-background: #2b2b2b;
     -fx-background-color: #2b2b2b;
-    -fx-table-cell-border-color: transparent;
-    -fx-table-header-border-color: transparent;
     -fx-text-fill: white;
 }
 
-.table-row-cell:odd {
-    -fx-background-color: #3c3f41;
+.table-row-cell:selected {
+    -fx-background-color: #567dbc; /* Couleur de fond pour les lignes sélectionnées */
+    -fx-background-insets: 0, 0 0 1 0; /* Ajoute un inset pour simuler une bordure */
+    -fx-text-fill: white; /* Couleur du texte pour les lignes sélectionnées */
 }
 
-.table-row-cell:even {
-    -fx-background-color: #2b2b2b;
+
+.table-row-cell:focused {
+    -fx-background-color: #456bae; /* Couleur de fond légèrement différente pour la ligne ayant le focus */
+    -fx-text-fill: white;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #567dbc; /* Couleur de fond pour les lignes sélectionnées */
+    -fx-text-fill: white; /* Couleur du texte pour les lignes sélectionnées */
+    -fx-border-color: transparent transparent #567dbc transparent; /* Bordure basse de couleur pour les lignes sélectionnées */
 }
 
 .scroll-bar {
@@ -57,9 +70,3 @@
 .scroll-bar .thumb {
     -fx-background-color: #3c3f41;
 }
-
-.text-area {
-    -fx-control-inner-background: #222;
-    -fx-text-fill: white;
-}
-
