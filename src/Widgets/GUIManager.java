@@ -9,20 +9,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+import javafx.scene.image.ImageView;
+
 
 public class GUIManager {
 
     public Scene build_scene(Stage primaryStage) {
         Font gameFont18 = Font.loadFont(getClass()
-                .getResourceAsStream("/Assets/alagard/alagard.ttf"), 32);
+                .getResourceAsStream("/Assets/FONT/alagard/alagard.ttf"), 32);
         Font gameFont16 = Font.loadFont(getClass()
-                .getResourceAsStream("/Assets/alagard/alagard.ttf"), 26);
+                .getResourceAsStream("/Assets/FONT/alagard/alagard.ttf"), 26);
         Font gameFont14 = Font.loadFont(getClass()
-                .getResourceAsStream("/Assets/alagard/alagard.ttf"), 22);
+                .getResourceAsStream("/Assets/FONT/alagard/alagard.ttf"), 22);
 
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 800, 600);
@@ -81,31 +84,41 @@ public class GUIManager {
         HBox.setHgrow(statsBox, Priority.ALWAYS);
 
 
-        // Info du joueur et inventaire
-        VBox rightBox = new VBox(20);
-        rightBox.setPadding(new Insets(15));
-        rightBox.setStyle("-fx-background-color: #222; -fx-border-color: #AAA; -fx-border-width: 1;");
+        VBox rightBox = new VBox(10);
+        rightBox.setPadding(new Insets(10));
+        rightBox.setStyle("-fx-background-color: #222; -fx-border-color: #999; -fx-border-width: 2;");
 
-        // Info du joueur (nom et heure/date)
-        HBox playerInfo = new HBox(10);
-        playerInfo.setAlignment(Pos.TOP_CENTER);
-        playerInfo.setStyle("-fx-background-color: #444; -fx-padding: 5; " +
-                "-fx-border-radius: 5; -fx-background-radius: 5;");
-        Text nameText = new Text("Nom: Joueur1");
+        Text nameText = new Text("Joueur1");
+        nameText.setFont(gameFont14);
+        nameText.setFill(Color.web("#FF9F1C")); // Updated color for preference
         nameText.setFontSmoothingType(FontSmoothingType.LCD);
-        nameText.setFont(gameFont18);
-        nameText.setFill(Color.web("#FFC857"));
-        nameText.setStyle("-fx-font-size: 14;");
-        Text dateText = new Text("Jour: 01 Heure: 12:00");
-        dateText.setFont(gameFont18);
-        dateText.setFontSmoothingType(FontSmoothingType.LCD);
-        dateText.setFill(Color.web("#FFC857"));
-        dateText.setStyle("-fx-font-size: 14;");
-        VBox infoBox = new VBox(5);
-        infoBox.getChildren().addAll(nameText, dateText);
-        playerInfo.getChildren().add(infoBox);
+        nameText.setTextAlignment(TextAlignment.CENTER);
 
-        rightBox.getChildren().addAll(playerInfo, this.build_scroll_pane_inventory(scene));
+        // Center the player name in its container
+        StackPane nameContainer = new StackPane(nameText);
+        nameContainer.setAlignment(Pos.CENTER);
+
+        // TODO: Make this dynamic
+        ImageView currentWeather = this.getImageFromTime("22:00");
+        Text dayText = new Text("Jour: 01");
+        dayText.setFont(gameFont14);
+        dayText.setFill(Color.web("#FF6B6B")); // Maintained color for differentiation
+        dayText.setFontSmoothingType(FontSmoothingType.LCD);
+
+        Text timeText = new Text("Heure: 12:00");
+        timeText.setFont(gameFont14);
+        timeText.setFill(Color.web("#FFE66D")); // Kept bright color for visibility
+        timeText.setFontSmoothingType(FontSmoothingType.LCD);
+
+        HBox dateTimeBox = new HBox(10);
+        dateTimeBox.getChildren().addAll(currentWeather, dayText, timeText);
+        dateTimeBox.setAlignment(Pos.CENTER);
+
+        VBox playerInfoBox = new VBox(10, nameContainer, dateTimeBox);
+
+        rightBox.getChildren().addAll(playerInfoBox, build_scroll_pane_inventory(scene));
+
+
         HBox.setHgrow(rightBox, Priority.ALWAYS);
 
         top_part.getChildren().addAll(statsBox, rightBox);
@@ -200,6 +213,27 @@ public class GUIManager {
         scrollPane.setStyle("-fx-background: #222; -fx-border-color: #AAA;");
 
         return scrollPane;
+    }
+
+    private ImageView getImageFromTime(String time)
+    {
+        Image image;
+
+        // TODO: Test this
+        int hour = Integer.parseInt(time.split(":")[0]);
+
+        if (hour >= 6 && hour < 8) {
+            image = new Image("Assets/GUI/WEATHER/sunrise.png");
+        } else if (hour >= 8 && hour < 18) {
+            image = new Image("Assets/GUI/WEATHER/sun.png");
+        } else if (hour >= 18 && hour < 21) {
+            image = new Image("Assets/GUI/WEATHER/sunset.png");
+        } else {
+            image = new Image("Assets/GUI/WEATHER/moon.png");
+        }
+
+
+        return new ImageView(image);
     }
 
 }
