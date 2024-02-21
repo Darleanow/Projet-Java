@@ -21,6 +21,14 @@ import javafx.scene.image.ImageView;
 
 public class GUIManager {
 
+    TextFlow logs;
+
+    public GUIManager()
+    {
+        this.logs = new TextFlow();
+        this.logs.setStyle("-fx-background-color: #222; -fx-padding: 10;");
+    }
+
     public Scene build_scene(Stage primaryStage) {
         Font gameFont18 = Font.loadFont(getClass()
                 .getResourceAsStream("/Assets/FONT/alagard/alagard.ttf"), 32);
@@ -33,9 +41,7 @@ public class GUIManager {
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add("dark-theme.css");
 
-        TextArea logArea = new TextArea();
-        logArea.setEditable(false);
-        logArea.setPrefHeight(root.getHeight() / 2.5);
+        this.logs.setPrefHeight(root.getHeight() / 2.5);
 
 
         HBox top_part = new HBox();
@@ -81,8 +87,10 @@ public class GUIManager {
         HBox energyBox = new HBox(energyText);
         energyBox.setAlignment(Pos.CENTER_LEFT);
 
+
+
         // Ajouter les éléments à la VBox
-        statsBox.getChildren().addAll(titleContainer, hpBox, hungerBox, energyBox);
+        statsBox.getChildren().addAll(titleContainer, hpBox, hungerBox, energyBox/*, build_quests_constructions_pane()*/);
         HBox.setHgrow(statsBox, Priority.ALWAYS);
 
         VBox rightBox = new VBox(10);
@@ -125,18 +133,22 @@ public class GUIManager {
 
         root.setTop(top_part);
 
-        VBox container_logs = new VBox(this.build_combo_boxes(), logArea);
 
-        HBox.setHgrow(logArea, Priority.ALWAYS);
+        ScrollPane logsContainer = new ScrollPane();
+        logsContainer.setContent(this.logs);
+        logsContainer.setFitToWidth(true);
+        VBox container_logs = new VBox(this.build_combo_boxes(), logsContainer);
+
+        HBox.setHgrow(this.logs, Priority.ALWAYS);
 
         root.setBottom(container_logs);
 
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            logArea.setPrefWidth(newVal.intValue() / 2.5);
+            this.logs.setPrefWidth(newVal.intValue() / 2.5);
         });
 
         primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            logArea.setPrefHeight(newVal.intValue() / 2.5);
+            this.logs.setPrefHeight(newVal.intValue() / 2.5);
         });
 
         return scene;
@@ -241,6 +253,57 @@ public class GUIManager {
         return scrollPane;
     }
 
+/*    private TabPane build_quests_constructions_pane()
+    {
+        // Quetes et constructions
+        TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
+        Tab questsTab = new Tab("Quêtes");
+        VBox questsContent = new VBox(5);
+        questsContent.setPadding(new Insets(10));
+
+        // Exemple d'ajout d'une quête
+        Button questButton = new Button("Nom de quête");
+        questButton.setOnAction(event -> {
+            // Affichage d'une popup pour les détails de la quête
+            Alert questDetails = new Alert(Alert.AlertType.INFORMATION);
+            questDetails.setTitle("Détails de la quête");
+            questDetails.setHeaderText("Nom de quête");
+            questDetails.setContentText("Description de la quête\nRécompense: ");
+            // Ajoutez ici les icônes des récompenses si nécessaire
+            questDetails.showAndWait();
+        });
+
+        questsContent.getChildren().add(questButton);
+
+        ScrollPane questsScrollPane = new ScrollPane(questsContent);
+        questsScrollPane.setFitToWidth(true);
+        questsTab.setContent(questsScrollPane);
+
+
+        Tab constructionsTab = new Tab("Constructions");
+        VBox constructionsContent = new VBox(5);
+        constructionsContent.setPadding(new Insets(10));
+
+        // Exemple d'ajout d'une construction
+        HBox constructionBox = new HBox(10);
+        constructionBox.setAlignment(Pos.CENTER_LEFT);
+        // Ajoutez une ImageView pour l'icône si vous en avez
+        Label constructionLabel = new Label("Nom de construction");
+        Label constructionUtilite = new Label("À quoi ça sert");
+        constructionBox.getChildren().addAll(constructionLabel, constructionUtilite);
+
+        constructionsContent.getChildren().add(constructionBox);
+
+        ScrollPane constructionsScrollPane = new ScrollPane(constructionsContent);
+        constructionsScrollPane.setFitToWidth(true);
+        constructionsTab.setContent(constructionsScrollPane);
+
+        tabPane.getTabs().addAll(questsTab, constructionsTab);
+
+        return tabPane;
+    }*/
 
     private ImageView getImageFromTime(String time)
     {
@@ -263,4 +326,23 @@ public class GUIManager {
         return new ImageView(image);
     }
 
+    /* Overloading paintLog for flexibility*/
+    public void paintLog( String log, Boolean lineReturn, String color, boolean setBold) {
+        Text text = new Text(log + (lineReturn ? "\n" : ""));
+        text.setFontSmoothingType(FontSmoothingType.LCD);
+        text.setStyle("-fx-fill: " + color + ";" + (setBold ? "-fx-font-weight: bold;" : "")); // Couleur du texte
+        this.logs.getChildren().add(text);
+    }
+    public void paintLog( String log, Boolean lineReturn, String color) {
+        Text text = new Text(log + (lineReturn ? "\n" : ""));
+        text.setFontSmoothingType(FontSmoothingType.LCD);
+        text.setStyle("-fx-fill: " + color + ";");
+        this.logs.getChildren().add(text);
+    }
+    public void paintLog( String log, Boolean lineReturn) {
+        Text text = new Text(log + (lineReturn ? "\n" : ""));
+        text.setFontSmoothingType(FontSmoothingType.LCD);
+        text.setStyle("-fx-fill: white;");
+        this.logs.getChildren().add(text);
+    }
 }
