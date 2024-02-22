@@ -36,7 +36,6 @@ public class GUIManager {
     private WeatherPanel weatherPanel;
     private  InventoryPanel inventoryPanel;
     private PlayerActions playerActions;
-    private Logger logger;
     private FontManager fontManager;
 
     public GUIManager(GameTime gameTime) {
@@ -46,7 +45,6 @@ public class GUIManager {
         this.weatherPanel = new WeatherPanel(gameTime,this.fontManager);
         this.playerActions = new PlayerActions();
         this.inventoryPanel = new InventoryPanel();
-        this.logger = new Logger();
     }
 
     public Scene buildScene(Stage primaryStage) {
@@ -71,7 +69,9 @@ public class GUIManager {
         topPart.getChildren().addAll(playerPanelBox, rightBox);
         HBox.setHgrow(rightBox, Priority.ALWAYS);
 
-        VBox containerLogs = new VBox(this.playerActions.createPanel(), this.logger.buildLogger(primaryStage, root));
+        ScrollPane logContainer = Logger.buildLogger();
+
+        VBox containerLogs = new VBox(this.playerActions.createPanel(), logContainer);
 
         root.setTop(topPart);
         root.setBottom(containerLogs);
