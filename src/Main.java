@@ -7,8 +7,8 @@ import Player.*;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
-        GUIManager gui = new GUIManager();
         GameTime timeline = new GameTime();
+        GUIManager gui = new GUIManager(timeline);
         Scene scene = gui.buildScene(primaryStage, timeline);
 
         primaryStage.setTitle("Survival Game");

@@ -34,6 +34,7 @@ public class GUIManager {
     private Player player;
 
     private PlayerStatsPanel playerPannel;
+    private WeatherPanel weatherPanel;
 
     private final TextFlow logs = new TextFlow();
     private FontManager fontManager;
@@ -41,10 +42,11 @@ public class GUIManager {
 
     private Text dayText, timeText;
     private ImageView currentWeather;
-    public GUIManager() {
+    public GUIManager(GameTime gameTime) {
         this.player = new Player();
         this.fontManager = new FontManager();
         this.playerPannel = new PlayerStatsPanel(this.player, this.fontManager);
+        this.weatherPanel = new WeatherPanel(gameTime,this.fontManager);
 
         configureLogs();
         loadFonts();
@@ -74,49 +76,11 @@ public class GUIManager {
         top_part.setFillHeight(true);
 
 
-
         VBox rightBox = new VBox(10);
         rightBox.setPadding(new Insets(10));
         rightBox.setStyle("-fx-background-color: #222; -fx-border-color: #999; -fx-border-width: 2;");
 
-        Text nameText = new Text("Joueur1");
-        nameText.setFont(gameFont22);
-        nameText.setFill(Color.web("#FF9F1C"));
-        nameText.setFontSmoothingType(FontSmoothingType.LCD);
-        nameText.setTextAlignment(TextAlignment.CENTER);
-
-        // Center the player name in its container&
-        StackPane nameContainer = new StackPane(nameText);
-        nameContainer.setAlignment(Pos.CENTER);
-
-        // TODO: Make this dynamic
-        this.currentWeather = this.getImageFromTime("6");
-        this.dayText = new Text();
-        dayText.setFont(gameFont22);
-        dayText.setFill(Color.web("#FF6B6B"));
-        dayText.setFontSmoothingType(FontSmoothingType.LCD);
-
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), ev -> {
-            gameTime.incrementHour();
-            updateDateTimeDisplay(gameTime);
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-
-        this.timeText = new Text();
-        timeText.setFont(gameFont22);
-        timeText.setFill(Color.web("#FFE66D"));
-        timeText.setFontSmoothingType(FontSmoothingType.LCD);
-
-        updateDateTimeDisplay(gameTime);
-
-        HBox dateTimeBox = new HBox(10);
-        dateTimeBox.getChildren().addAll(currentWeather, dayText, timeText);
-        dateTimeBox.setAlignment(Pos.CENTER);
-
-        VBox playerInfoBox = new VBox(10, nameContainer, dateTimeBox);
-
-        rightBox.getChildren().addAll(playerInfoBox, buildScrollPaneInventory(scene));
+        rightBox.getChildren().addAll(weatherPanel.createPanel(), buildScrollPaneInventory(scene));
 
         HBox.setHgrow(rightBox, Priority.ALWAYS);
 
@@ -382,33 +346,6 @@ public class GUIManager {
 
         return tabPane;
     }*/
-
-    private ImageView getImageFromTime(String time)
-    {
-        Image image;
-
-        // TODO: Test this
-        int hour = Integer.parseInt(time.split(":")[0]);
-
-        if (hour >= 6 && hour < 8) {
-            image = new Image("Assets/GUI/WEATHER/sunrise.png");
-        } else if (hour >= 8 && hour < 18) {
-            image = new Image("Assets/GUI/WEATHER/sun.png");
-        } else if (hour >= 18 && hour < 21) {
-            image = new Image("Assets/GUI/WEATHER/sunset.png");
-        } else {
-            image = new Image("Assets/GUI/WEATHER/moon.png");
-        }
-
-
-        return new ImageView(image);
-    }
-
-    private void updateDateTimeDisplay(GameTime gameTime) {
-        this.dayText.setText("Jour: " + gameTime.getDay());
-        this.timeText.setText("Heure: " + String.format("%02d:00", gameTime.getHour()));
-        this.currentWeather.setImage(getImageFromTime(String.format("%02d:00", gameTime.getHour())).getImage());
-    }
 
     /* Overloading paintLog for flexibility*/
     public void paintLog( String log, Boolean lineReturn, String color, boolean setBold) {
