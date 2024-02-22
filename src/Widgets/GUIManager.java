@@ -36,7 +36,9 @@ public class GUIManager {
     private PlayerStatsPanel playerPannel;
     private WeatherPanel weatherPanel;
 
-    private final TextFlow logs = new TextFlow();
+    private Logger logger;
+
+
     private FontManager fontManager;
     private Font gameFont32, gameFont26, gameFont22;
 
@@ -47,16 +49,14 @@ public class GUIManager {
         this.fontManager = new FontManager();
         this.playerPannel = new PlayerStatsPanel(this.player, this.fontManager);
         this.weatherPanel = new WeatherPanel(gameTime,this.fontManager);
+        this.logger = new Logger();
 
-        configureLogs();
         loadFonts();
-        // Load gui
+
 
     }
 
-    private void configureLogs() {
-        this.logs.setStyle("-fx-background-color: #222; -fx-padding: 10;");
-    }
+
 
     private void loadFonts() {
         gameFont32 = this.fontManager.loadFont(32);
@@ -69,7 +69,6 @@ public class GUIManager {
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add("dark-theme.css");
 
-        this.logs.setPrefHeight(root.getHeight() / 2.5);
 
 
         HBox top_part = new HBox();
@@ -86,24 +85,10 @@ public class GUIManager {
 
         top_part.getChildren().addAll(this.playerPannel.createPanel(), rightBox);
 
+        VBox container_logs = new VBox(this.build_combo_boxes(), this.logger.buildLogger(primaryStage, root));
+
         root.setTop(top_part);
-
-        ScrollPane logsContainer = new ScrollPane();
-        logsContainer.setContent(this.logs);
-        logsContainer.setFitToWidth(true);
-        VBox container_logs = new VBox(this.build_combo_boxes(), logsContainer);
-
-        HBox.setHgrow(this.logs, Priority.ALWAYS);
-
         root.setBottom(container_logs);
-
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            this.logs.setPrefWidth(newVal.intValue() / 2.5);
-        });
-
-        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            this.logs.setPrefHeight(newVal.intValue() / 2.5);
-        });
 
         return scene;
     }
@@ -346,24 +331,4 @@ public class GUIManager {
 
         return tabPane;
     }*/
-
-    /* Overloading paintLog for flexibility*/
-    public void paintLog( String log, Boolean lineReturn, String color, boolean setBold) {
-        Text text = new Text(log + (lineReturn ? "\n" : ""));
-        text.setFontSmoothingType(FontSmoothingType.LCD);
-        text.setStyle("-fx-fill: " + color + ";" + (setBold ? "-fx-font-weight: bold;" : "")); // Couleur du texte
-        this.logs.getChildren().add(text);
-    }
-    public void paintLog( String log, Boolean lineReturn, String color) {
-        Text text = new Text(log + (lineReturn ? "\n" : ""));
-        text.setFontSmoothingType(FontSmoothingType.LCD);
-        text.setStyle("-fx-fill: " + color + ";");
-        this.logs.getChildren().add(text);
-    }
-    public void paintLog( String log, Boolean lineReturn) {
-        Text text = new Text(log + (lineReturn ? "\n" : ""));
-        text.setFontSmoothingType(FontSmoothingType.LCD);
-        text.setStyle("-fx-fill: white;");
-        this.logs.getChildren().add(text);
-    }
 }

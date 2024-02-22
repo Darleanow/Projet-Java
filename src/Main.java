@@ -14,9 +14,9 @@ public class Main extends Application {
         primaryStage.setTitle("Survival Game");
         primaryStage.setScene(scene);
         primaryStage.show();
-        gui.paintLog( "Hello dear adventurer, you just woke up on a apparent desert island, you'll have to survive " +
+        /*gui.paintLog( "Hello dear adventurer, you just woke up on a apparent desert island, you'll have to survive " +
                 "the longest possible !\n" +
-                "You can select actions by clicking on the dropdown menu above this !", true);
+                "You can select actions by clicking on the dropdown menu above this !", true);*/
         /*gui.paintLog( "Hello world", true, "red", true);
         gui.paintLog( "Hello world", true, "red");
         gui.paintLog( "Hello world", true);*/
