@@ -9,7 +9,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         GameTime timeline = new GameTime();
         GUIManager gui = new GUIManager(timeline);
-        Scene scene = gui.buildScene(primaryStage, timeline);
+        Scene scene = gui.buildScene(primaryStage);
 
         primaryStage.setTitle("Survival Game");
         primaryStage.setScene(scene);

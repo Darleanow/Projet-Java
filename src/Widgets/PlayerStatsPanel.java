@@ -31,7 +31,7 @@ public class PlayerStatsPanel {
 
         // Font size 32
         Font font32 = this.fontManager.loadFont(32);
-        Font font22 = this.fontManager.loadFont(32);
+        Font font22 = this.fontManager.loadFont(22);
 
         // Titre des statistiques
         Text title_stats = new Text("Statistiques");
@@ -44,28 +44,21 @@ public class PlayerStatsPanel {
 
         // HP
         Text hpText = new Text();
-        // On high resolution screens, antialiasing might affect the render of small fonts
-        // We set the smoothing type to lcd, and it's fixed !
-        hpText.setFontSmoothingType(FontSmoothingType.LCD);
         hpText.textProperty().bind(Bindings.concat("HP: ", player.hpProperty().asString()));
-        hpText.setFont(font22);
-        hpText.setFill(Color.web("#E63946"));
+        hpText = configureText(hpText, font22,Color.web("#E63946"));
         HBox hpBox = new HBox(hpText);
         hpBox.setAlignment(Pos.CENTER_LEFT);
 
         // Faim
         Text hungerText = new Text("Faim: 0%");
-        hungerText.setFont(font22);
-        hungerText.setFontSmoothingType(FontSmoothingType.LCD);
-        hungerText.setFill(Color.web("#e67e39"));
+        hungerText = configureText(hungerText, font22,Color.web("#E67E39"));
         HBox hungerBox = new HBox(hungerText);
         hungerBox.setAlignment(Pos.CENTER_LEFT);
 
         // Energie
         Text energyText = new Text("Energie: 50");
-        energyText.setFont(font22);
-        energyText.setFontSmoothingType(FontSmoothingType.LCD);
-        energyText.setFill(Color.web("#2A9D8F"));
+        energyText = configureText(energyText, font22,Color.web("#2A9D8F"));
+
         HBox energyBox = new HBox(energyText);
         energyBox.setAlignment(Pos.CENTER_LEFT);
 
@@ -74,5 +67,14 @@ public class PlayerStatsPanel {
         HBox.setHgrow(statsBox, Priority.ALWAYS);
 
         return statsBox;
+    }
+
+    private Text configureText(Text text, Font font, Color color)
+    {
+        text.setFont(font);
+        text.setFontSmoothingType(FontSmoothingType.LCD);
+        text.setFill(color);
+
+        return text;
     }
 }

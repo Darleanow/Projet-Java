@@ -6,7 +6,7 @@ import javafx.scene.layout.HBox;
 
 public class PlayerActions {
 
-    public HBox buildActions() {
+    public HBox createPanel() {
         GroupedComboBoxWidget groupedComboBoxWidget = new GroupedComboBoxWidget();
 
         // Set main options

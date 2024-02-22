@@ -23,7 +23,7 @@ public class InventoryPanel {
 
     }
 
-    public ScrollPane buildScrollPaneInventory(Scene scene) {
+    public ScrollPane createPanel(Scene scene) {
         TableView<InventoryItem> inventoryTable = buildInventoryLine();
 
         // Add items to the inventory

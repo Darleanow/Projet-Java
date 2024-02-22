@@ -37,13 +37,8 @@ public class GUIManager {
     private  InventoryPanel inventoryPanel;
     private PlayerActions playerActions;
     private Logger logger;
-
-
     private FontManager fontManager;
-    private Font gameFont32, gameFont26, gameFont22;
 
-    private Text dayText, timeText;
-    private ImageView currentWeather;
     public GUIManager(GameTime gameTime) {
         this.player = new Player();
         this.fontManager = new FontManager();
@@ -52,46 +47,37 @@ public class GUIManager {
         this.playerActions = new PlayerActions();
         this.inventoryPanel = new InventoryPanel();
         this.logger = new Logger();
-
-        loadFonts();
-
-
     }
 
-
-
-    private void loadFonts() {
-        gameFont32 = this.fontManager.loadFont(32);
-        gameFont26 = this.fontManager.loadFont(26);
-        gameFont22 = this.fontManager.loadFont(22);
-    }
-
-    public Scene buildScene(Stage primaryStage, GameTime gameTime) {
+    public Scene buildScene(Stage primaryStage) {
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add("dark-theme.css");
 
-        HBox top_part = new HBox();
-        top_part.setFillHeight(true);
+        HBox topPart = new HBox();
+        topPart.setFillHeight(true);
+
+        // Assuming playerPanel.createPanel() returns a VBox or similar
+        VBox playerPanelBox = this.playerPannel.createPanel();
+        // Set right border to 0 for the player panel
+        playerPanelBox.setStyle("-fx-background-color: #222; -fx-border-color: #999; -fx-border-width: 2 0 2 2;");
 
         VBox rightBox = new VBox(10);
         rightBox.setPadding(new Insets(10));
-        rightBox.setStyle("-fx-background-color: #222; -fx-border-color: #999; -fx-border-width: 2;");
+        // Set left border to 0 for the right box
+        rightBox.setStyle("-fx-background-color: #222; -fx-border-color: #999; -fx-border-width: 2 2 2 2;");
+        rightBox.getChildren().addAll(weatherPanel.createPanel(), this.inventoryPanel.createPanel(scene));
 
-        rightBox.getChildren().addAll(weatherPanel.createPanel(), this.inventoryPanel.buildScrollPaneInventory(scene));
-
+        topPart.getChildren().addAll(playerPanelBox, rightBox);
         HBox.setHgrow(rightBox, Priority.ALWAYS);
 
-        top_part.getChildren().addAll(this.playerPannel.createPanel(), rightBox);
+        VBox containerLogs = new VBox(this.playerActions.createPanel(), this.logger.buildLogger(primaryStage, root));
 
-        VBox container_logs = new VBox(this.playerActions.buildActions(), this.logger.buildLogger(primaryStage, root));
-
-        root.setTop(top_part);
-        root.setBottom(container_logs);
+        root.setTop(topPart);
+        root.setBottom(containerLogs);
 
         return scene;
     }
-
 
 
 /*    private TabPane build_quests_constructions_pane()
