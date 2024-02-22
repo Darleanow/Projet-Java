@@ -36,12 +36,27 @@ public class WeatherPanel {
         this.dayText = createStyledText("", "#FF6B6B", 22, null);
         this.timeText = createStyledText("", "#FFE66D", 22, null);
 
+        configureFixedSizeForText(this.dayText, 70);
+        configureFixedSizeForText(this.timeText, 130);
+        configureFixedSizeForImageView(this.currentWeather, 32,32);
+
         updateDateTimeDisplay(); // Initialize text
 
         HBox dateTimeBox = new HBox(10, currentWeather, dayText, timeText);
         dateTimeBox.setAlignment(Pos.CENTER);
 
         return new VBox(10, nameContainer, dateTimeBox);
+    }
+
+    private void configureFixedSizeForText(Text text, double width) {
+        text.setWrappingWidth(width); // Set a fixed wrapping width
+        text.setTextAlignment(TextAlignment.CENTER);
+    }
+
+    private void configureFixedSizeForImageView(ImageView imageView, double width, double height) {
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
+        imageView.setPreserveRatio(true);
     }
 
     private Text createStyledText(String text, String colorHex, double fontSize, TextAlignment alignment) {
