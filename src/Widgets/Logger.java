@@ -1,69 +1,64 @@
 package Widgets;
 
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class Logger {
-    private final TextFlow logs;
+    private final TextFlow logs = new TextFlow();
 
-    public Logger()
-    {
-        this.logs = new TextFlow();
+    public Logger() {
         configureLogs();
     }
 
-    public ScrollPane buildLogger(Stage PrimaryStage, BorderPane root)
-    {
-        this.logs.setPrefHeight(root.getHeight() / 2.5);
-
-        ScrollPane logsContainer = new ScrollPane();
-        logsContainer.setContent(this.logs);
+    public ScrollPane buildLogger(Stage primaryStage, BorderPane root) {
+        ScrollPane logsContainer = new ScrollPane(logs);
         logsContainer.setFitToWidth(true);
+        VBox.setVgrow(logsContainer, Priority.ALWAYS); // Ensure logsContainer can expand vertically within any container
 
+        // Dynamically adjust log size based on the stage size
+        ChangeListener<Number> sizeListener = (observable, oldValue, newValue) -> adjustLogSize(primaryStage);
+        primaryStage.widthProperty().addListener(sizeListener);
+        primaryStage.heightProperty().addListener(sizeListener);
 
-        HBox.setHgrow(this.logs, Priority.ALWAYS);
-
-
-
-        PrimaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            this.logs.setPrefWidth(newVal.intValue() / 2.5);
-        });
-
-        PrimaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            this.logs.setPrefHeight(newVal.intValue() / 2.5);
-        });
+        // Initial size adjustment
+        adjustLogSize(primaryStage);
 
         return logsContainer;
     }
 
-    private void configureLogs() {
-        this.logs.setStyle("-fx-background-color: #222; -fx-padding: 10;");
+    private void adjustLogSize(Stage primaryStage) {
+        double width = primaryStage.getWidth() / 2.5;
+        double height = primaryStage.getHeight() / 2.5;
+        logs.setPrefSize(width, height);
     }
 
-    /* Overloading paintLog for flexibility*/
-    public void paintLog( String log, Boolean lineReturn, String color, boolean setBold) {
-        Text text = new Text(log + (lineReturn ? "\n" : ""));
-        text.setFontSmoothingType(FontSmoothingType.LCD);
-        text.setStyle("-fx-fill: " + color + ";" + (setBold ? "-fx-font-weight: bold;" : "")); // Couleur du texte
-        this.logs.getChildren().add(text);
+    private void configureLogs() {
+        logs.setStyle("-fx-background-color: #222; -fx-padding: 10;");
     }
-    public void paintLog( String log, Boolean lineReturn, String color) {
-        Text text = new Text(log + (lineReturn ? "\n" : ""));
-        text.setFontSmoothingType(FontSmoothingType.LCD);
-        text.setStyle("-fx-fill: " + color + ";");
-        this.logs.getChildren().add(text);
+
+    public void paintLog(String log, boolean lineReturn, String color, boolean setBold) {
+        Text text = createText(log, lineReturn, color, setBold);
+        logs.getChildren().add(text);
     }
-    public void paintLog( String log, Boolean lineReturn) {
+
+    public void paintLog(String log, boolean lineReturn, String color) {
+        paintLog(log, lineReturn, color, false);
+    }
+
+    public void paintLog(String log, boolean lineReturn) {
+        paintLog(log, lineReturn, "white", false);
+    }
+
+    private Text createText(String log, boolean lineReturn, String color, boolean setBold) {
         Text text = new Text(log + (lineReturn ? "\n" : ""));
-        text.setFontSmoothingType(FontSmoothingType.LCD);
-        text.setStyle("-fx-fill: white;");
-        this.logs.getChildren().add(text);
+        text.setStyle(String.format("-fx-fill: %s; %s",
+                color, setBold ? "-fx-font-weight: bold;" : ""));
+        return text;
     }
 }

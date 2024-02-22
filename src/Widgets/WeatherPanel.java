@@ -4,7 +4,6 @@ import Game.FontManager;
 import Game.GameTime;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,88 +13,68 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
-import Game.GameTime;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 public class WeatherPanel {
     private final GameTime gameTime;
     private Text dayText, timeText;
-    private Font gameFont22;
-    private ImageView currentWeather;
+    private final ImageView currentWeather = new ImageView();
+    private final FontManager fontManager;
 
-    public WeatherPanel(GameTime gameTime, FontManager fontLoader) {
+    public WeatherPanel(GameTime gameTime, FontManager fontManager) {
         this.gameTime = gameTime;
-        this.gameFont22 = fontLoader.loadFont(22);
+        this.fontManager = fontManager;
+        initTimeUpdateLoop();
     }
 
     public VBox createPanel() {
-
-
-        Text nameText = new Text("Joueur1");
-        nameText.setFont(gameFont22);
-        nameText.setFill(Color.web("#FF9F1C"));
-        nameText.setFontSmoothingType(FontSmoothingType.LCD);
-        nameText.setTextAlignment(TextAlignment.CENTER);
-
-        // Center the player name in its container&
+        Text nameText = createStyledText("Joueur1", "#FF9F1C", 22, TextAlignment.CENTER);
         StackPane nameContainer = new StackPane(nameText);
         nameContainer.setAlignment(Pos.CENTER);
 
-        this.currentWeather = this.getImageFromTime("6");
-        this.dayText = new Text();
-        dayText.setFont(gameFont22);
-        dayText.setFill(Color.web("#FF6B6B"));
-        dayText.setFontSmoothingType(FontSmoothingType.LCD);
+        this.dayText = createStyledText("", "#FF6B6B", 22, null);
+        this.timeText = createStyledText("", "#FFE66D", 22, null);
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), ev -> {
-            gameTime.incrementHour();
-            updateDateTimeDisplay(gameTime);
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        updateDateTimeDisplay(); // Initialize text
 
-        this.timeText = new Text();
-        timeText.setFont(gameFont22);
-        timeText.setFill(Color.web("#FFE66D"));
-        timeText.setFontSmoothingType(FontSmoothingType.LCD);
-
-        updateDateTimeDisplay(gameTime);
-
-        HBox dateTimeBox = new HBox(10);
-        dateTimeBox.getChildren().addAll(currentWeather, dayText, timeText);
+        HBox dateTimeBox = new HBox(10, currentWeather, dayText, timeText);
         dateTimeBox.setAlignment(Pos.CENTER);
 
-        VBox gameInfoBox = new VBox(10, nameContainer, dateTimeBox);
-
-        return gameInfoBox;
+        return new VBox(10, nameContainer, dateTimeBox);
     }
 
-    private ImageView getImageFromTime(String time)
-    {
-        Image image;
-
-        // TODO: Test this
-        int hour = Integer.parseInt(time.split(":")[0]);
-
-        if (hour >= 6 && hour < 8) {
-            image = new Image("Assets/GUI/WEATHER/sunrise.png");
-        } else if (hour >= 8 && hour < 18) {
-            image = new Image("Assets/GUI/WEATHER/sun.png");
-        } else if (hour >= 18 && hour < 21) {
-            image = new Image("Assets/GUI/WEATHER/sunset.png");
-        } else {
-            image = new Image("Assets/GUI/WEATHER/moon.png");
+    private Text createStyledText(String text, String colorHex, double fontSize, TextAlignment alignment) {
+        Text styledText = new Text(text);
+        styledText.setFont(fontManager.loadFont(fontSize));
+        styledText.setFill(Color.web(colorHex));
+        styledText.setFontSmoothingType(FontSmoothingType.LCD);
+        if (alignment != null) {
+            styledText.setTextAlignment(alignment);
         }
-
-
-        return new ImageView(image);
+        return styledText;
     }
 
-    private void updateDateTimeDisplay(GameTime gameTime) {
-        this.dayText.setText("Jour: " + gameTime.getDay());
-        this.timeText.setText("Heure: " + String.format("%02d:00", gameTime.getHour()));
-        this.currentWeather.setImage(getImageFromTime(String.format("%02d:00", gameTime.getHour())).getImage());
+    private void initTimeUpdateLoop() {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), ev -> updateDateTimeDisplay()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    private void updateDateTimeDisplay() {
+        gameTime.setHour(gameTime.getHour() + 1);
+        dayText.setText("Jour: " + gameTime.getDay());
+        timeText.setText("Heure: " + String.format("%02d:00", gameTime.getHour()));
+        currentWeather.setImage(getImageFromTime(gameTime.getHour()));
+    }
+
+    private Image getImageFromTime(int hour) {
+        String imagePath = switch (hour) {
+            case 6, 7 -> "Assets/GUI/WEATHER/sunrise.png";
+            case 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 -> "Assets/GUI/WEATHER/sun.png";
+            case 18, 19, 20 -> "Assets/GUI/WEATHER/sunset.png";
+            default -> "Assets/GUI/WEATHER/moon.png";
+        };
+        return new Image(imagePath);
     }
 }
