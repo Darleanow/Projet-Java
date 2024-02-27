@@ -1,0 +1,71 @@
+{
+  "items": [
+    {
+      "name": "Bois",
+      "file": "tile000.png",
+      "description": "Utile pour la création d'objets.",
+      "type": "crafting",
+      "attributes": {
+        "damage": 10,
+        "durability": 100
+      }
+    },
+    {
+      "name": "Branche",
+      "file": "tile001.png",
+      "description": "Une petite branche",
+      "type": "crafting",
+      "attributes": {
+        "damage": 10,
+        "durability": 100
+      }
+    },
+    {
+      "name": "Pioche en Bois",
+      "file": "tile002.png",
+      "description": "Peut aider a miner des minerais basiques.",
+      "type": "tool",
+      "attributes": {
+        "strength": 5,
+        "durability": 30
+      },
+      "recipe": {
+        "Bois": 3,
+        "Baton en Bois": 1,
+      }
+    },
+    {
+      "name": "Planche en Bois",
+      "file": "tile003.png",
+      "description": "Permet de crafter de l'équipement, des logements.",
+      "type": "crafting",
+      "recipe": {
+        "wood": 1
+      }
+    },
+    {
+      "name": "Plume",
+      "file": "tile007.png",
+      "description": "Une plume d'oiseau.",
+      "type": "crafting",
+    },
+    {
+      "name": "Baton en Bois",
+      "file": "tile010.png",
+      "description": "Utile pour des outils",
+      "type": "crafting",
+      "recipe": {
+        "Planche en Bois": 2
+      }
+    },
+    {
+      "name": "Planche en Bois",
+      "file": "tile003.png",
+      "description": "Permet de crafter de l'équipement, des logements.",
+      "type": "crafting",
+      "recipe": {
+        "wood": 1
+      }
+    }
+  ]
+}

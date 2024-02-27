@@ -9,7 +9,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -28,107 +27,56 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import Player.*;
 
-
 public class GUIManager {
+    private final Sidebar sidebar;
+    private final Stats stats;
 
-    private Player player;
-    private PlayerStatsPanel playerPannel;
-    private WeatherPanel weatherPanel;
-    private  InventoryPanel inventoryPanel;
-    private PlayerActions playerActions;
-    private FontManager fontManager;
-
-    public GUIManager(GameTime gameTime) {
-        this.player = new Player();
-        this.fontManager = new FontManager();
-        this.playerPannel = new PlayerStatsPanel(this.player, this.fontManager);
-        this.weatherPanel = new WeatherPanel(gameTime,this.fontManager);
-        this.playerActions = new PlayerActions();
-        this.inventoryPanel = new InventoryPanel();
+    public GUIManager() {
+        this.sidebar = new Sidebar();
+        this.stats = new Stats();
     }
 
     public Scene buildScene(Stage primaryStage) {
-        BorderPane root = new BorderPane();
-        Scene scene = new Scene(root, 800, 600);
+        // Root layout is now a StackPane
+        StackPane root = new StackPane();
+
+        // Create the logger and stats bar as before
+        Logger logger = new Logger(500, 300);
+/*        VBox statsBar = stats.createStatsBar();*/
+
+        // Create a BorderPane for structured layout
+        BorderPane borderPane = new BorderPane();
+
+        // Construct the top area of the BorderPane
+        HBox topArea = new HBox(logger);
+        HBox.setHgrow(logger, Priority.ALWAYS);
+        /*HBox.setHgrow(statsBar, Priority.ALWAYS);*/
+
+        borderPane.setTop(topArea);
+
+        // Set the BorderPane in the center of the StackPane
+        root.getChildren().add(borderPane);
+
+        // Sidebar container created and positioned absolutely
+        StackPane sidebarContainer = sidebar.createSidebarContainer();
+        sidebarContainer.setMaxWidth(200); // Set the max width for the sidebar
+
+        // Absolute positioning of the sidebar on the left
+        StackPane.setAlignment(sidebarContainer, Pos.CENTER_LEFT);
+        root.getChildren().add(sidebarContainer);
+
+        // Apply CSS styling
+        Scene scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add("dark-theme.css");
 
-        HBox topPart = new HBox();
-        topPart.setFillHeight(true);
+        // Update the log from anywhere in the code
+        logger.log("This is a new log entry.");
 
-        // Assuming playerPanel.createPanel() returns a VBox or similar
-        VBox playerPanelBox = this.playerPannel.createPanel();
-        // Set right border to 0 for the player panel
-        playerPanelBox.setStyle("-fx-background-color: #222; -fx-border-color: #999; -fx-border-width: 2 0 2 2;");
+        // Update stats from anywhere in the code
 
-        VBox rightBox = new VBox(10);
-        rightBox.setPadding(new Insets(10));
-        // Set left border to 0 for the right box
-        rightBox.setStyle("-fx-background-color: #222; -fx-border-color: #999; -fx-border-width: 2 2 2 2;");
-        rightBox.getChildren().addAll(weatherPanel.createPanel(), this.inventoryPanel.createPanel(scene));
-
-        topPart.getChildren().addAll(playerPanelBox, rightBox);
-        HBox.setHgrow(rightBox, Priority.ALWAYS);
-
-        ScrollPane logContainer = Logger.buildLogger();
-
-        VBox containerLogs = new VBox(this.playerActions.createPanel(), logContainer);
-
-        root.setTop(topPart);
-        root.setBottom(containerLogs);
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
         return scene;
     }
-
-
-/*    private TabPane build_quests_constructions_pane()
-    {
-        // Quetes et constructions
-        TabPane tabPane = new TabPane();
-        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-
-        Tab questsTab = new Tab("Quêtes");
-        VBox questsContent = new VBox(5);
-        questsContent.setPadding(new Insets(10));
-
-        // Exemple d'ajout d'une quête
-        Button questButton = new Button("Nom de quête");
-        questButton.setOnAction(event -> {
-            // Affichage d'une popup pour les détails de la quête
-            Alert questDetails = new Alert(Alert.AlertType.INFORMATION);
-            questDetails.setTitle("Détails de la quête");
-            questDetails.setHeaderText("Nom de quête");
-            questDetails.setContentText("Description de la quête\nRécompense: ");
-            // Ajoutez ici les icônes des récompenses si nécessaire
-            questDetails.showAndWait();
-        });
-
-        questsContent.getChildren().add(questButton);
-
-        ScrollPane questsScrollPane = new ScrollPane(questsContent);
-        questsScrollPane.setFitToWidth(true);
-        questsTab.setContent(questsScrollPane);
-
-
-        Tab constructionsTab = new Tab("Constructions");
-        VBox constructionsContent = new VBox(5);
-        constructionsContent.setPadding(new Insets(10));
-
-        // Exemple d'ajout d'une construction
-        HBox constructionBox = new HBox(10);
-        constructionBox.setAlignment(Pos.CENTER_LEFT);
-        // Ajoutez une ImageView pour l'icône si vous en avez
-        Label constructionLabel = new Label("Nom de construction");
-        Label constructionUtilite = new Label("À quoi ça sert");
-        constructionBox.getChildren().addAll(constructionLabel, constructionUtilite);
-
-        constructionsContent.getChildren().add(constructionBox);
-
-        ScrollPane constructionsScrollPane = new ScrollPane(constructionsContent);
-        constructionsScrollPane.setFitToWidth(true);
-        constructionsTab.setContent(constructionsScrollPane);
-
-        tabPane.getTabs().addAll(questsTab, constructionsTab);
-
-        return tabPane;
-    }*/
 }

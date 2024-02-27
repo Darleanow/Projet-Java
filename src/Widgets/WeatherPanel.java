@@ -77,7 +77,7 @@ public class WeatherPanel {
     }
 
     private void updateDateTimeDisplay() {
-        gameTime.setHour(gameTime.getHour() + 1);
+        this.gameTime.incrementHour();
         dayText.setText("Jour: " + gameTime.getDay());
         timeText.setText("Heure: " + String.format("%02d:00", gameTime.getHour()));
         currentWeather.setImage(getImageFromTime(gameTime.getHour()));
