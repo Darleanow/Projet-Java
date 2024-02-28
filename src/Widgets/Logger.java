@@ -3,10 +3,8 @@ package Widgets;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import java.util.LinkedList;
@@ -14,8 +12,6 @@ import java.util.Queue;
 
 public class Logger extends Pane {
     private Canvas canvas;
-    private ScrollPane scrollPane; // ScrollPane to contain the canvas
-    private VBox contentBox;
     private GraphicsContext gc;
     private final Image[] sprites = new Image[9];
     private final Queue<String> messages = new LinkedList<>();
@@ -23,7 +19,6 @@ public class Logger extends Pane {
     private final double tileHeight = 64;
     private double contentWidth;
     private double contentHeight;
-    private double nextTextY;
 
     public Logger(double height) {
         this.setPrefHeight(height);
@@ -119,7 +114,7 @@ public class Logger extends Pane {
         gc.setFont(Font.font("Verdana", 20));
         gc.setFill(Color.WHITESMOKE);
 
-        nextTextY = tileHeight;
+        double nextTextY = tileHeight;
 
         for (String message : messages) {
             nextTextY += gc.getFont().getSize();

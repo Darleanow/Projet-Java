@@ -69,6 +69,26 @@ public class GUIManager {
         // Update the log from anywhere in the code
         logger.log("Hello world!");
         logger.log("This is a new log entry.");
+        logger.log("Hello world!");
+        logger.log("This is a new log entry.");
+
+        logger.log("Hello world!");
+        logger.log("This is a new log entry.");
+
+        logger.log("Hello world!");
+        logger.log("This is a new log entry.");
+        logger.log("Hello world!");
+        logger.log("This is a new log entry.");
+        logger.log("Hello world!");
+        logger.log("This is a new log entry.");
+        logger.log("Hello world!");
+        logger.log("This is a new log entry.");
+        logger.log("Hello world!");
+        logger.log("This is a new log entry.");
+        logger.log("Hello world!");
+        logger.log("This is a new log entry.");
+
+
 
         // Update stats from anywhere in the code
 
