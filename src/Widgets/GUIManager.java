@@ -41,16 +41,13 @@ public class GUIManager {
         StackPane root = new StackPane();
 
         // Create the logger and stats bar as before
-        Logger logger = new Logger(500, 300);
-/*        VBox statsBar = stats.createStatsBar();*/
+        Logger logger = new Logger(300);
 
         // Create a BorderPane for structured layout
         BorderPane borderPane = new BorderPane();
 
-        // Construct the top area of the BorderPane
         HBox topArea = new HBox(logger);
-        HBox.setHgrow(logger, Priority.ALWAYS);
-        /*HBox.setHgrow(statsBar, Priority.ALWAYS);*/
+        HBox.setHgrow(logger, Priority.ALWAYS); // Ensure logger takes full width
 
         borderPane.setTop(topArea);
 
@@ -70,6 +67,7 @@ public class GUIManager {
         scene.getStylesheets().add("dark-theme.css");
 
         // Update the log from anywhere in the code
+        logger.log("Hello world!");
         logger.log("This is a new log entry.");
 
         // Update stats from anywhere in the code
