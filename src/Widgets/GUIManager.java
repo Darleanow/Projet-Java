@@ -12,6 +12,8 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -37,8 +39,13 @@ public class GUIManager {
     }
 
     public Scene buildScene(Stage primaryStage) {
+
         // Root layout is now a StackPane
         StackPane root = new StackPane();
+
+        // Apply CSS styling
+        Scene scene = new Scene(root, 1280, 720);
+        scene.getStylesheets().add("dark-theme.css");
 
         // Create the logger and stats bar as before
         Logger logger = new Logger(300);
@@ -55,38 +62,25 @@ public class GUIManager {
         root.getChildren().add(borderPane);
 
         // Sidebar container created and positioned absolutely
-        StackPane sidebarContainer = sidebar.createSidebarContainer();
+        StackPane sidebarContainer = sidebar.createSidebarContainer(scene);
         sidebarContainer.setMaxWidth(200); // Set the max width for the sidebar
 
         // Absolute positioning of the sidebar on the left
         StackPane.setAlignment(sidebarContainer, Pos.CENTER_LEFT);
         root.getChildren().add(sidebarContainer);
 
-        // Apply CSS styling
-        Scene scene = new Scene(root, 1280, 720);
-        scene.getStylesheets().add("dark-theme.css");
+
+
+        Image image = new Image("Assets/GUI/cursor.png"); // Load cursor image
+        Cursor cursor = new ImageCursor(image);
+        scene.setCursor(cursor); // Set custom cursor for the entire scene
 
         // Update the log from anywhere in the code
+        logger.log("Hello world! This is a kind of long message for you to write, i hope you'll keep up to it nd of long message for you to write, i hope you'll keep up to it");
         logger.log("Hello world!");
-        logger.log("This is a new log entry.");
-        logger.log("Hello world!");
-        logger.log("This is a new log entry.");
 
-        logger.log("Hello world!");
-        logger.log("This is a new log entry.");
 
-        logger.log("Hello world!");
-        logger.log("This is a new log entry.");
-        logger.log("Hello world!");
-        logger.log("This is a new log entry.");
-        logger.log("Hello world!");
-        logger.log("This is a new log entry.");
-        logger.log("Hello world!");
-        logger.log("This is a new log entry.");
-        logger.log("Hello world!");
-        logger.log("This is a new log entry.");
-        logger.log("Hello world!");
-        logger.log("This is a new log entry.");
+
 
 
 

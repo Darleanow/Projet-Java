@@ -2,6 +2,9 @@ package Widgets;
 
         import javafx.geometry.Insets;
         import javafx.geometry.Pos;
+        import javafx.scene.Cursor;
+        import javafx.scene.ImageCursor;
+        import javafx.scene.Scene;
         import javafx.scene.control.Button;
         import javafx.scene.effect.DropShadow;
         import javafx.scene.image.Image;
@@ -12,21 +15,41 @@ package Widgets;
 
 public class Sidebar {
 
+    Cursor cursorHover;
+    Cursor cursorClick;
+    Cursor cursorDefault;
+
     private Image loadImageWithHighQuality(String path, double requestedWidth, double requestedHeight) {
         Image image = new Image(getClass().getResourceAsStream(path), requestedWidth, requestedHeight, false, false);
         return image;
     }
 
-    public StackPane createSidebarContainer() {
+    public StackPane createSidebarContainer(Scene scene) {
         VBox sidebar = new VBox();
         sidebar.setAlignment(Pos.CENTER);
         sidebar.setSpacing(20); // Increased spacing
+
 
         // Create buttons
         Button buttonExplore = createButtonWithIcon("explore2.png");
         Button buttonCraft = createButtonWithIcon("craft.png");
         Button buttonBuild = createButtonWithIcon("build.png");
         Button buttonSleep = createButtonWithIcon("sleep.png");
+
+
+        Image cursHover = new Image("Assets/GUI/cursorHover.png"); // Load cursor image
+        Image cursClick = new Image("Assets/GUI/cursorClick.png"); // Load cursor image
+        Image cursDefault = new Image("Assets/GUI/cursor.png"); // Load cursor image
+
+        this.cursorHover = new ImageCursor(cursHover);
+        this.cursorClick = new ImageCursor(cursClick);
+        this.cursorDefault = new ImageCursor(cursDefault);
+
+        setupButtonEventHandlers(buttonExplore, scene);
+        setupButtonEventHandlers(buttonCraft, scene);
+        setupButtonEventHandlers(buttonBuild, scene);
+        setupButtonEventHandlers(buttonSleep, scene);
+
 
         // Adding buttons to the sidebar VBox
         sidebar.getChildren().addAll(buttonExplore, buttonCraft, buttonBuild, buttonSleep);
@@ -36,6 +59,10 @@ public class Sidebar {
 
         // Expand button, positioned to the left of the sidebar
         Button expandButton = createSmallButtonWithIcon("expand.png");
+
+        setupButtonEventHandlers(minimizeButton, scene);
+        setupButtonEventHandlers(expandButton, scene);
+        
         expandButton.setVisible(false); // Initially hidden
 
         // Use a BorderPane for layout inside the StackPane
@@ -138,4 +165,14 @@ public class Sidebar {
 
         return button;
     }
+
+    private void setupButtonEventHandlers(Button button, Scene scene) {
+        button.setOnMouseEntered(event -> scene.setCursor(cursorHover)); // Change to hover cursor on mouse enter
+        button.setOnMouseExited(event -> scene.setCursor(cursorDefault)); // Change to default cursor on mouse exit
+
+        // For mouse click events, consider mouse pressed and released to simulate the click
+        button.setOnMousePressed(event -> scene.setCursor(cursorClick)); // Change to click cursor on mouse press
+        button.setOnMouseReleased(event -> scene.setCursor(cursorHover)); // Change back to hover cursor on mouse release
+    }
+
 }
